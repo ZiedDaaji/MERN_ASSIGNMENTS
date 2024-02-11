@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import axios from 'axios';
+import { Link } from 'react-router-dom';
+
 
 
 
@@ -38,7 +40,11 @@ const Create = () => {
             <input value={description} onChange={(e) => {setDescription(e.target.value)}}/>
             </div>
             <input type="submit" className='submit-input' value="Create" />
+            <Link to={"/products/all"}>
+                <h3>See All Products</h3>
+            </Link>
         </form>
+        
         
     )
 }

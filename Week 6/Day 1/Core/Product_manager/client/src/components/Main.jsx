@@ -1,43 +1,47 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 
 
 
 const Main = () => {
-    const [title, setTitle] = useState("")
-    const [price, setPrice] = useState("")
-    const [description, setDescription] = useState("")
+    const [products, setProducts] = useState([]);
 
-    const submitHandler = (e) => {
-        e.preventDefault();
-
-        axios.post("http://localhost:8000/api/products", {
-            title,
-            price,
-            description
-        })
+    useEffect(() => {
+        axios.get("http://localhost:8000/api/products")
         .then((res) => {
             console.log(res.data)
-            setTitle("");
-            setPrice("");
-            setDescription("");
+            setProducts(res.data)
         })
-    }
+        .catch((err) => {
+            console.log(err)
+        })
+    },[])
+
+
+
 
     return (
-        <form id='creation' onSubmit={submitHandler}>
-            <div id='title'>Title :  
-                <input value={title} onChange={(e) => {setTitle(e.target.value)}} />
-            </div>
-            <div id='price'>Price : 
-                <input type='Number' value={price} onChange={(e) => {setPrice(e.target.value)}}/>
-            </div>
-            <div id='descp'>Description : 
-            <input value={description} onChange={(e) => {setDescription(e.target.value)}}/>
-            </div>
-            <input type="submit" className='submit-input' value="Create" />
-        </form>
+        <div>
+            <h2>All Products</h2>
+            {
+                products.map((oneProduct) => {
+                    return (
+                        <div key={oneProduct._id}>
+                            <Link to={"/products/" + oneProduct._id}>
+                                <h4>{oneProduct.title}</h4>
+                            </Link>
+                            
+                        </div>
+                    )
+                })
+            }
+            <Link to={"/products/"}>
+                <h3>Go back to Create</h3>
+            </Link>
+        </div>
+        
         
     )
 }
