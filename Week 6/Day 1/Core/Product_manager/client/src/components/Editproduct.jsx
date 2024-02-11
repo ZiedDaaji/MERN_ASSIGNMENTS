@@ -1,21 +1,21 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 
 
-
-
-
-const Create = () => {
+const Editproduct = () => {
+    const [product, setProduct] = useState([null]);
     const [title, setTitle] = useState("")
     const [price, setPrice] = useState("")
     const [description, setDescription] = useState("")
+    const {id} = useParams();
     const nav = useNavigate()
 
-    const submitHandler = (e) => {
+    const updateHandler = (e) => {
         e.preventDefault();
 
-        axios.post("http://localhost:8000/api/products", {
+        axios.patch("http://localhost:8000/api/products/" + id, {
             title,
             price,
             description
@@ -25,13 +25,27 @@ const Create = () => {
             setTitle("");
             setPrice("");
             setDescription("");
-            nav("/products/")
+            nav("/products")
         })
         .catch((err) => {console.log(err)})
     }
 
-    return (
-        <form id='creation' onSubmit={submitHandler}>
+    useEffect(() => {
+        axios.get("http://localhost:8000/api/products/" + id)
+        .then((res) => {
+            console.log(res.data)
+            setTitle(res.data.title);
+            setPrice(res.data.price);
+            setDescription(res.data.description);
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+    },[id])
+        return (
+    <div>Edit product
+        {JSON.stringify(product)}
+        <form id='creation' onSubmit={updateHandler}>
             <div id='title'>Title :  
                 <input value={title} onChange={(e) => {setTitle(e.target.value)}} />
             </div>
@@ -41,14 +55,14 @@ const Create = () => {
             <div id='descp'>Description : 
             <input value={description} onChange={(e) => {setDescription(e.target.value)}}/>
             </div>
-            <input type="submit" className='submit-input' value="Create" />
+            <input type="submit" className='submit-input' value="Edit" />
             <Link to={"/products"}>
                 <h3>See All Products</h3>
             </Link>
         </form>
-        
-        
+
+    </div>
     )
 }
 
-export default Create
+export default Editproduct

@@ -29,8 +29,7 @@ const OneProduct = () => {
                 </>
             ): <h3>Loading....</h3>
         }
-
-            <Link to={"/products/all"}>
+            <Link to={"/products"}>
                 <h3>See All Products</h3>
             </Link>
     </div>

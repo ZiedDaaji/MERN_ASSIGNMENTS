@@ -19,7 +19,19 @@ const Main = () => {
         })
     },[])
 
-
+    const deleteMe = (deleteId) => {
+        axios.delete('http://localhost:8000/api/products/' + deleteId)
+            .then(res => {
+                deleteMe(deleteId)
+                
+            })
+            const filtredProduct = products.filter((eachProduct) => {
+                return eachProduct._id !== deleteId
+            })
+            setProducts(filtredProduct)
+            
+            .catch(err => {console.log(err)})
+    }
 
 
     return (
@@ -32,12 +44,13 @@ const Main = () => {
                             <Link to={"/products/" + oneProduct._id}>
                                 <h4>{oneProduct.title}</h4>
                             </Link>
-                            
+                            <button onClick={() => {deleteMe(oneProduct._id)}}>Delete</button>
+                            <Link to={`/products/edit/${oneProduct._id}`}>Edit Product</Link>
                         </div>
                     )
                 })
             }
-            <Link to={"/products/"}>
+            <Link to={"/"}>
                 <h3>Go back to Create</h3>
             </Link>
         </div>
